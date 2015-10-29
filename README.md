@@ -16,6 +16,7 @@ and provide a target Graphite path. The dot notation is representative of Graphi
 structure path to the underlying data.
 
 ```
+; Assumes Leiningen is installed
 git clone http://github.com/dmillett/graci
 cd graci
 lein repl
@@ -24,13 +25,13 @@ lein repl
 Create the urls for the Graphite server instance and service/event paths.
 ```clojure
 ; Build the graphite urls (server, service path)
-user=> (def am_search (graphite-urls "http://graphite.hulk" "am.search")
+user=> (def am_search (graphite-urls "http://graphite.hulk" "am.search"))
 
 ; Specify a single metric
-user=> (def am_winning (graphite-urls "http://graphite.hulk" "am.smash" :metrics ["count"])
+user=> (def am_winning (graphite-urls "http://graphite.hulk" "am.smash" :metrics ["count"]))
 
 ; Specify a specific time range
-user=> (def am_smash (graphite-urls "http://graphite.hulk" "am.smash" :from "20151027 18" :until "20151027 19:30")
+user=> (def am_smash (graphite-urls "http://graphite.hulk" "am.smash" :from "20151027 18" :until "20151027 19:30"))
 ```
 
 Fetch the raw Graphite data, which returns a collection of hashmaps
@@ -45,7 +46,7 @@ user=> (def parsed (:body (first data)))
 
 ## License
 
-Copyright © 2015 FIXME
+Copyright © 2015 
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
