@@ -32,15 +32,18 @@
   "Creates a date from string that is used in graphite. Supported date-time formats
   include: see (datetime-patterns). This seems a bit messy (todo: cleanup)."
   [date_time]
-  (cond
-    (= 2 (count date_time)) (.. (.. (LocalDateTime/now) (withMinute 0)) (withHour (read-string date_time)))
-    (= 5 (count date_time)) (let [[h m] (map #(read-string %) (s/split date_time #":"))]
-                              (.. (LocalDateTime/now) (withHour h) (withMinute m)))
-    (= 8 (count date_time)) (LocalDateTime/parse (str date_time " 00")(DateTimeFormatter/ofPattern "yyyyMMdd HH"))
-    (= 11 (count date_time)) (LocalDateTime/parse date_time (DateTimeFormatter/ofPattern "yyyyMMdd HH"))
-    (= 14 (count date_time))  (LocalDateTime/parse date_time (DateTimeFormatter/ofPattern "yyyyMMdd HH:mm"))
-    :else (throw (RuntimeException. (str "'" date_time "' Is Invalid. See (datetime-patterns)")))
-    ))
+  (let [text (if (number? date_time) (apply str (take 2 (str date_time))) date_time)
+        c (count text)
+        ldtfx #(LocalDateTime/parse %1 (DateTimeFormatter/ofPattern %2))]
+    (cond
+      (or (= 1 c) (= 2 c)) (.. (LocalDateTime/now) (withMinute 0) (withHour (read-string text)))
+      (= 5 c) (let [[h m] (map #(read-string %) (s/split text #":"))]
+                           (.. (LocalDateTime/now) (withHour h) (withMinute m)))
+      (= 8 c) (ldtfx (str text " 00") "yyyyMMdd HH")
+      (= 11 c) (ldtfx text "yyyyMMdd HH")
+      (= 14 c) (ldtfx text "yyyyMMdd HH:mm")
+      :else (throw (RuntimeException. (str "'" date_time "' Is Invalid. See (datetime-patterns)")))
+     ) ) )
 
 (defn graphite-urls
   "Create a graphite url lookup (hint: graphite uses a directory type structure),
