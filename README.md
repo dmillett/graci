@@ -50,9 +50,12 @@ Create a time series hash for a metric
 user=> (def time_series (metric-time-series parsed))
 {"am.smash.avgLatency" {1445868060 12709.547, 1445868120 11976.233, 1445868180 nil}}
 ```
+Simple plot examples (where the x/y lables are optional values for 'scatter-plot')
+```clojure
+user=> (icore/view (let [[k v] (first time_series)] (icharts/scatter-plot (keys v) (vals v))))
+```
 
 todo: lazy metric time-series for subset data
-todo: incanter plot examples
 todo: incanter statistic examples
 
 ## License
