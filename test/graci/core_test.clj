@@ -65,6 +65,16 @@
       0.0 (first (:results (get results "am.smash.countFailed")))
       ) ) )
 
+(deftest test-metric-time-series
+  (let [metric1 (parse-metric-data latency)
+        result1 (metric-time-series metric1)
+        result2 (apply metric-time-series metric1)]
+    (are [x y] (= x y)
+      {"am.smash.avgLatency" {1445868060 12709.547, 1445868120 11976.233, 1445868180 nil}} result1
+      result2 result1
+      )
+    ) )
+
 (deftest test-plusx
   (are [x y] (= x y)
     nil (plusx)

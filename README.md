@@ -40,9 +40,20 @@ Fetch the raw Graphite data, which returns a collection of hashmaps
 user=> (def data (get-graphite-data am_smash))
 
 ; Graphite data is in the :body of the response
-user=> (def parsed (:body (first data)))
+user=> (def parsed (parse-metric-data (:body (first data))))
 {am.smash.avgLatency {:start 1445868060, :stop 1445868240, :step 60, :results (0.547 0.623 nil)}}
 ```
+
+Create a time series hash for a metric
+```clojure
+; Use parsed metric data
+user=> (def time_series (metric-time-series parsed))
+{"am.smash.avgLatency" {1445868060 12709.547, 1445868120 11976.233, 1445868180 nil}}
+```
+
+todo: lazy metric time-series for subset data
+todo: incanter plot examples
+todo: incanter statistic examples
 
 ## License
 

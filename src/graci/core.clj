@@ -97,6 +97,20 @@
   [metric_group_data]
   (apply merge (map parse-metric-data (s/split metric_group_data dnewline))))
 
+(defn metric-time-series
+  "Build a time series for a single metric. This will begin with ':start' and
+  increment with :step before pairing with result data (avgLatency/count/etc)."
+  ([metric] (apply metric-time-series metric))
+  ([name value]
+    (let [step (:step value)
+          start (:start value)]
+      {name 
+        (zipmap
+          (for [i (range 0 (count (:results value)))] (+ start (* i step)) )
+          (:results value) ) } 
+     ) ) )
+
+; todo: move to a separate namespace?
 (defn plusx
   "Handles the addition of only numbers and will not throw an exception.
   For example, if (+ x y) and 'y' is a String, it returns x"
